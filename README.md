@@ -4,7 +4,7 @@ Automatizacion de pruebas API para [PokeAPI](https://pokeapi.co/) usando Cypress
 
 ## Alcance
 
-Este proyecto valida los escenarios del challenge:
+Este proyecto valida escenarios API sobre endpoints `GET` del dominio Berry:
 
 - `GET /api/v2/berry/{id}` con id valido.
 - `GET /api/v2/berry/{id}` con id invalido.
@@ -20,22 +20,49 @@ Este proyecto valida los escenarios del challenge:
 - Node.js + npm
 - Reporteria JUnit para CI
 
-## Estructura
+## Arquitectura
+
+La suite esta organizada por recurso para escalar mejor en contexto enterprise. Cada recurso puede crecer con specs por metodo HTTP y tipo de suite.
 
 ```text
 cypress/
 +-- e2e/
 |   +-- api/
-|       +-- smoke/       # pruebas criticas y rapidas
-|       +-- regression/  # validaciones mas completas
-+-- fixtures/            # datos de prueba versionados
+|       +-- berry/
+|           +-- berry.get.smoke.cy.js
+|           +-- berry.get.regression.cy.js
++-- fixtures/
+|   +-- pokeapi-test-data.json
 +-- support/
-    +-- api/             # cliente HTTP reutilizable
-    +-- services/        # servicios por dominio/recurso
-    +-- assertions/      # assertions reutilizables
-    +-- e2e.js           # configuracion global Cypress
+    +-- api/
+    |   +-- pokeapi.client.js
+    +-- services/
+    |   +-- berry.service.js
+    +-- assertions/
+    |   +-- http.assertions.js
+    |   +-- berry.assertions.js
+    +-- e2e.js
 scripts/
-+-- run-cypress.js       # runner cross-platform para limpiar ELECTRON_RUN_AS_NODE
++-- run-cypress.js
+```
+
+## Como escalar
+
+Si se agrega un nuevo recurso:
+
+```text
+cypress/e2e/api/item/item.get.smoke.cy.js
+cypress/e2e/api/item/item.get.regression.cy.js
+cypress/support/services/item.service.js
+cypress/support/assertions/item.assertions.js
+```
+
+Si se agregan metodos de escritura en un recurso:
+
+```text
+cypress/e2e/api/berry/berry.post.regression.cy.js
+cypress/e2e/api/berry/berry.put.regression.cy.js
+cypress/e2e/api/berry/berry.delete.regression.cy.js
 ```
 
 ## Instalacion
@@ -56,6 +83,10 @@ npm run cy:run
 
 ```bash
 npm run test:api
+```
+
+```bash
+npm run test:berry
 ```
 
 ```bash
@@ -100,6 +131,7 @@ La carpeta `results/` no se versiona porque contiene artefactos generados por ej
 
 ## Buenas practicas aplicadas
 
+- Specs organizadas por recurso y nombradas por metodo/suite.
 - Specs enfocadas en comportamiento, no en detalles de implementacion.
 - Cliente API centralizado en `cypress/support/api`.
 - Servicios por recurso en `cypress/support/services`.

@@ -15,8 +15,8 @@ const validBerry = { id: berry.validId, name: berry.validName };
 
 describe("PokeAPI Regression Suite", () => {
   it(
-    "[SMOKE][REGRESSION] [API][Berry] should return 200 and expected payload when requesting berry by valid id (1)",
-    { tags: ["@smoke", "@regression"] },
+    "[REGRESSION] [API][Berry] should return 200 and expected payload when requesting berry by valid id (1)",
+    { tags: ["@regression"] },
     () => {
       berryService.getBerryById(berry.validId).then((response) => {
         expectBerryDetails(response, validBerry);
@@ -25,8 +25,8 @@ describe("PokeAPI Regression Suite", () => {
   );
 
   it(
-    "[SMOKE][REGRESSION] [API][Berry] should return 404 Not found when requesting berry by invalid id (0)",
-    { tags: ["@smoke", "@regression"] },
+    "[REGRESSION] [API][Berry] should return 404 Not found when requesting berry by invalid id (0)",
+    { tags: ["@regression"] },
     () => {
       berryService.getBerryByIdAllowingFailure(berry.invalidId).then(expectNotFoundResponse);
     }
@@ -51,8 +51,8 @@ describe("PokeAPI Regression Suite", () => {
   );
 
   it(
-    "[SMOKE][REGRESSION] [API][Berry-Flavor] should return 200 and berries list when requesting flavor by valid name (spicy)",
-    { tags: ["@smoke", "@regression"] },
+    "[REGRESSION] [API][Berry-Flavor] should return 200 and berries list when requesting flavor by valid name (spicy)",
+    { tags: ["@regression"] },
     () => {
       berryService.getBerryFlavorByName(flavor.validName).then((response) => {
         expectBerryFlavor(response, flavor.validName);
@@ -62,8 +62,8 @@ describe("PokeAPI Regression Suite", () => {
   );
 
   it(
-    "[SMOKE][REGRESSION] [API][Berry-Flavor->Berry] should fetch highest-potency spicy berry and return consistent berry details",
-    { tags: ["@smoke", "@regression"] },
+    "[REGRESSION] [API][Berry-Flavor->Berry] should fetch highest-potency spicy berry and return consistent berry details",
+    { tags: ["@regression"] },
     () => {
       berryService.getBerryFlavorByName(flavor.validName).then((flavorResponse) => {
         expectBerryFlavor(flavorResponse, flavor.validName);
@@ -84,3 +84,4 @@ describe("PokeAPI Regression Suite", () => {
     }
   );
 });
+
