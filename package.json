@@ -1,26 +1,31 @@
 {
-  "name": "edenred-pokeapi-cypress",
-  "version": "1.0.0",
-  "description": "API automation tests for PokeAPI using Cypress",
-  "main": "index.js",
-  "scripts": {
-    "test": "set ELECTRON_RUN_AS_NODE=&& cypress run",
-    "cy:open": "set ELECTRON_RUN_AS_NODE=&& cypress open",
-    "cy:run": "set ELECTRON_RUN_AS_NODE=&& cypress run",
-    "test:api": "set ELECTRON_RUN_AS_NODE=&& cypress run --spec \"cypress/e2e/api/**/*.cy.js\"",
-    "test:smoke": "set ELECTRON_RUN_AS_NODE=&& cypress run --spec \"cypress/e2e/api/smoke/**/*.cy.js\"",
-    "test:regression": "set ELECTRON_RUN_AS_NODE=&& cypress run --spec \"cypress/e2e/api/regression/**/*.cy.js\"",
-    "test:tag:smoke": "set ELECTRON_RUN_AS_NODE=&& cypress run --env grepTags=@smoke",
-    "test:tag:regression": "set ELECTRON_RUN_AS_NODE=&& cypress run --env grepTags=@regression",
-    "test:ci:pr": "set ELECTRON_RUN_AS_NODE=&& cypress run --env grepTags=@smoke --reporter junit --reporter-options \"mochaFile=results/junit/pr-[hash].xml,toConsole=true\"",
-    "test:ci:nightly": "set ELECTRON_RUN_AS_NODE=&& cypress run --env grepTags=@regression --reporter junit --reporter-options \"mochaFile=results/junit/nightly-[hash].xml,toConsole=true\""
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "devDependencies": {
-    "@bahmutov/cy-grep": "^2.1.0",
-    "cypress": "^13.17.0"
-  }
+    "name":  "edenred-pokeapi-cypress",
+    "version":  "1.0.0",
+    "description":  "API automation tests for PokeAPI using Cypress",
+    "main":  "index.js",
+    "scripts":  {
+                    "test":  "npm run cy:run",
+                    "cy:open":  "node scripts/run-cypress.js open",
+                    "cy:run":  "node scripts/run-cypress.js run",
+                    "test:api":  "node scripts/run-cypress.js run --spec \"cypress/e2e/api/**/*.cy.js\"",
+                    "test:smoke":  "node scripts/run-cypress.js run --spec \"cypress/e2e/api/smoke/**/*.cy.js\"",
+                    "test:regression":  "node scripts/run-cypress.js run --spec \"cypress/e2e/api/regression/**/*.cy.js\"",
+                    "test:tag:smoke":  "node scripts/run-cypress.js run --spec \"cypress/e2e/api/smoke/**/*.cy.js\" --env grepTags=@smoke",
+                    "test:tag:regression":  "node scripts/run-cypress.js run --spec \"cypress/e2e/api/regression/**/*.cy.js\" --env grepTags=@regression",
+                    "test:ci:pr":  "node scripts/run-cypress.js run --env grepTags=@smoke --reporter junit --reporter-options \"mochaFile=results/junit/pr-[hash].xml,toConsole=true\"",
+                    "test:ci:nightly":  "node scripts/run-cypress.js run --env grepTags=@regression --reporter junit --reporter-options \"mochaFile=results/junit/nightly-[hash].xml,toConsole=true\""
+                },
+    "keywords":  [
+                     "cypress",
+                     "pokeapi",
+                     "api-testing",
+                     "qa-automation"
+                 ],
+    "author":  "",
+    "license":  "ISC",
+    "type":  "commonjs",
+    "devDependencies":  {
+                            "@bahmutov/cy-grep":  "^2.1.0",
+                            "cypress":  "^13.17.0"
+                        }
 }

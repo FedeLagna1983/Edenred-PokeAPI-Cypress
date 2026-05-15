@@ -2,27 +2,41 @@
 
 Automatizacion de pruebas API para [PokeAPI](https://pokeapi.co/) usando Cypress.
 
-## Alcance de pruebas
+## Alcance
 
-Este proyecto valida los siguientes escenarios:
+Este proyecto valida los escenarios del challenge:
 
-- `GET /api/v2/berry/{id}` con `id` valido.
-- `GET /api/v2/berry/{id}` con `id` invalido.
-- `GET /api/v2/berry/{name}` con `name` valido.
-- `GET /api/v2/berry/{name}` con `name` invalido.
+- `GET /api/v2/berry/{id}` con id valido.
+- `GET /api/v2/berry/{id}` con id invalido.
+- `GET /api/v2/berry/{name}` con name valido.
+- `GET /api/v2/berry/{name}` con name invalido.
 - `GET /api/v2/berry-flavor/{name}` con flavor valido (`spicy`).
-- Flujo encadenado para flavor `spicy`: obtener berries, seleccionar la de mayor `potency` (desempate alfabetico por nombre), consultar `GET /api/v2/berry/{selectedName}` y validar consistencia de `potency`.
+- Flujo encadenado para flavor `spicy`: obtener berries, seleccionar la de mayor `potency`, consultar la baya seleccionada y validar consistencia.
 
-## Stack tecnico
+## Stack
 
 - Cypress `13.17.0`
-- `@bahmutov/cy-grep` `2.1.0` para ejecucion por tags
-- Reporteria JUnit para integracion CI
+- `@bahmutov/cy-grep` para ejecucion por tags
+- Node.js + npm
+- Reporteria JUnit para CI
 
-## Requisitos
+## Estructura
 
-- Node.js 18+ (recomendado LTS actual)
-- npm 9+
+```text
+cypress/
++-- e2e/
+|   +-- api/
+|       +-- smoke/       # pruebas criticas y rapidas
+|       +-- regression/  # validaciones mas completas
++-- fixtures/            # datos de prueba versionados
++-- support/
+    +-- api/             # cliente HTTP reutilizable
+    +-- services/        # servicios por dominio/recurso
+    +-- assertions/      # assertions reutilizables
+    +-- e2e.js           # configuracion global Cypress
+scripts/
++-- run-cypress.js       # runner cross-platform para limpiar ELECTRON_RUN_AS_NODE
+```
 
 ## Instalacion
 
@@ -64,8 +78,8 @@ npm run test:tag:regression
 
 Tags usados:
 
-- Suite smoke: `@smoke`
-- Suite regression: `@regression`
+- `@smoke`
+- `@regression`
 
 ## CI con JUnit
 
@@ -77,55 +91,30 @@ npm run test:ci:pr
 npm run test:ci:nightly
 ```
 
-Resultados:
+Resultados generados:
 
-- PR filtra por `@smoke` y genera `results/junit/pr-[hash].xml`
-- Nightly filtra por `@regression` y genera `results/junit/nightly-[hash].xml`
+- PR: `results/junit/pr-[hash].xml`
+- Nightly: `results/junit/nightly-[hash].xml`
+
+La carpeta `results/` no se versiona porque contiene artefactos generados por ejecucion.
+
+## Buenas practicas aplicadas
+
+- Specs enfocadas en comportamiento, no en detalles de implementacion.
+- Cliente API centralizado en `cypress/support/api`.
+- Servicios por recurso en `cypress/support/services`.
+- Assertions reutilizables en `cypress/support/assertions`.
+- Datos de prueba en fixture JSON.
+- Scripts npm cross-platform mediante `scripts/run-cypress.js`.
+- Artefactos generados ignorados por Git.
 
 ## Jenkins
 
-El proyecto ya incluye `Jenkinsfile` para ejecutar por tags desde Jenkins.
+El proyecto incluye `Jenkinsfile` para ejecutar por tags desde Jenkins.
 
-Como usarlo en Jenkins:
+Parametro `TEST_SUITE`:
 
-1. Crear un Job tipo Pipeline (o Multibranch Pipeline).
-2. Apuntar al repositorio `PokeAPI-Cypress`.
-3. Ejecutar con el parametro `TEST_SUITE`:
 - `smoke` para `@smoke`
 - `regression` para `@regression`
 
-Que hace el pipeline:
-
-- `checkout scm`
-- `npm ci`
-- ejecuta Cypress con tag segun `TEST_SUITE`
-- publica JUnit (`results/junit/*.xml`)
-- archiva artifacts (`results/junit/*.xml`, `cypress/screenshots/**`, `cypress/videos/**`)
-
-## Publicar en GitHub
-
-1. Crea un repositorio vacio en tu cuenta GitHub.
-2. Ejecuta desde la raiz del proyecto:
-
-```powershell
-.\scripts\connect-github.ps1 -RemoteUrl "https://github.com/<tu-usuario>/<tu-repo>.git"
-```
-
-Tambien puedes usar SSH:
-
-```powershell
-.\scripts\connect-github.ps1 -RemoteUrl "git@github.com:<tu-usuario>/<tu-repo>.git"
-```
-
-## Nota de entorno
-
-Los scripts limpian automaticamente `ELECTRON_RUN_AS_NODE` antes de ejecutar Cypress.
-Esto evita errores de inicio como `bad option: --smoke-test` en ambientes Windows donde esa variable esta definida globalmente.
-
-## Estructura
-
-- `cypress/e2e/api/smoke`: pruebas smoke
-- `cypress/e2e/api/regression`: pruebas regression
-- `cypress/support/e2e.js`: registro de `cy-grep`
-- `cypress.config.js`: `baseUrl`, plugin de tags y env de filtrado
-- `results/junit`: reportes XML de CI
+El pipeline ejecuta `npm ci`, corre Cypress por tag, publica JUnit y archiva artefactos.

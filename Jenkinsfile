@@ -10,12 +10,8 @@ pipeline {
     choice(
       name: 'TEST_SUITE',
       choices: ['smoke', 'regression'],
-      description: 'Select which tagged suite to run'
+      description: 'Select which suite to run'
     )
-  }
-
-  environment {
-    REPORTS_DIR = 'results/junit'
   }
 
   stages {
@@ -37,21 +33,18 @@ pipeline {
       }
     }
 
-    stage('Run Cypress by Tag') {
+    stage('Run Cypress Suite') {
       steps {
         script {
-          def tag = params.TEST_SUITE == 'smoke' ? '@smoke' : '@regression'
-          def reportFile = "${env.REPORTS_DIR}/${params.TEST_SUITE}-${env.BUILD_NUMBER}-[hash].xml"
-          def runCommand = "npx cypress run --env grepTags=${tag} --reporter junit --reporter-options mochaFile=${reportFile},toConsole=true"
+          def runCommand = "npm run test:tag:${params.TEST_SUITE} -- --reporter junit --reporter-options mochaFile=results/junit/${params.TEST_SUITE}-${env.BUILD_NUMBER}-[hash].xml,toConsole=true"
 
           if (isUnix()) {
-            sh "mkdir -p ${env.REPORTS_DIR}"
-            sh "ELECTRON_RUN_AS_NODE= ${runCommand}"
+            sh 'mkdir -p results/junit'
+            sh runCommand
           } else {
             bat """
               @echo off
-              if not exist "${env.REPORTS_DIR}" mkdir "${env.REPORTS_DIR}"
-              set ELECTRON_RUN_AS_NODE=
+              if not exist "results\\junit" mkdir "results\\junit"
               ${runCommand}
             """
           }

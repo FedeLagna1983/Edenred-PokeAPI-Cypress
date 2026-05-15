@@ -1,15 +1,25 @@
+# Dependencies
 node_modules/
 
-# Cypress artifacts
+# Cypress runtime artifacts
 cypress/downloads/
 cypress/screenshots/
 cypress/videos/
+
+# Test and CI reports
+results/
+coverage/
+.nyc_output/
 
 # Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 debug.log
 
-# CI reports
-results/
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,11 @@
+{
+  "berry": {
+    "validId": 1,
+    "validName": "cheri",
+    "invalidId": 0,
+    "invalidName": "berry-invalida-qa"
+  },
+  "flavor": {
+    "validName": "spicy"
+  }
+}
